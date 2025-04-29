@@ -23,10 +23,10 @@ function toggleDarkMode() {
     }
 }
 
-// ---------- Upload file ----------
 function handleUpload(event) {
     event.preventDefault();
     const formData = new FormData(event.target);
+    const fileInput = event.target.querySelector('input[type="file"]');
 
     fetch('/upload', {
         method: 'POST',
@@ -35,15 +35,16 @@ function handleUpload(event) {
     .then(response => {
         if (response.ok) {
             showModal('Upload successful!');
-            setTimeout(() => {
-                window.location.href = '/documents.html';
-            }, 2000);
+            if (fileInput) fileInput.value = ''; // clear input
+            if (typeof loadFileList === 'function') {
+                loadFileList(); // refresh visible file list
+            }
         } else {
-            throw new Error('Upload failed.');
+            return response.text().then(text => { throw new Error(text); });
         }
     })
     .catch(error => {
-        showModal('Upload failed. Please try again.');
+        showModal('Upload failed. ' + error.message);
         console.error('Error:', error);
     });
 }
@@ -126,6 +127,13 @@ function sendMessage() {
 window.addEventListener('load', () => {
     if (localStorage.getItem('darkMode') === 'enabled') {
         document.body.classList.add('dark-mode');
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    const uploadForm = document.getElementById('uploadForm');
+    if (uploadForm) {
+        uploadForm.addEventListener('submit', handleUpload);
     }
 });
 
