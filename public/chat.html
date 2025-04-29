@@ -7,8 +7,42 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script> <!-- socket.io client -->
     <script src="app.js" defer></script>
+   <style>
+
+  body { margin: 0; padding-bottom: 3rem; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
+
+#form { background: rgba(0, 0, 0, 0.05); padding: 0.5rem; display: flex; border-radius: 8px }
+
+#input { padding: 0.5rem 1rem; flex-grow: 1; border-radius: 8px; margin-right: 0.5rem; box-shadow: 0 0 10px rgba(0,255,255,0.7) }
+
+#input:focus { outline: none; box-shadow: 0 0 20px rgba(0,255,255,1); }
+
+#form > button { background: #333; border: none; padding: 0 1rem; border-radius: 8px; color: #ffffff; font-weight: bolder }
+
+#messages {height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background-color: #f9f9f9; box-shadow: 0 0 10px rgba(0,255,255,0.2); list-style-type: none; padding-left: 0 }
+#messages > li { padding: 0.5rem 1rem }
+#messages > li:nth-child(odd) { background: #efefef}
+
+
+#logo {  width: 50px; }
+
+.tools { display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 2rem; padding:2rem; flex-wrap: wrap;}
+
+.card {background: #ffffff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 2rem; max-width: 500px; width: 100%;}
+
+#uploadDocument { flex: 1 }
+
+#chat { flex: 2}
+
+@media (max-width: 768px){
+  .content{
+    flex-direction: column;
+    align-items: center;
+  }
+}
+</style>
 </head>
-<body onload="initializeChat()">
+<body>
 
 <!-- Modal for success/failure popups -->
 <div id="modal" onclick="closeModal()">
@@ -30,19 +64,78 @@
     </nav>
 </header>
 
-<div class="container">
-    <h1>Chat Room</h1>
-
-    <div id="chatBox" class="chat-box">
-        <!-- Messages will appear here -->
+ <div class = "container">
+    <div class ="title" align="center">
+    <h1 align="center" size="xxx-large">Chat with Your Documents</h1>
+    Ask questions based on your HOA's already uploaded documents or add your own to the chat.</div>
+    <div class = "tools">
+    <div id="uploadDocument" class="card">
+      <h2>Your HOA Documents</h2>
+      <h3>Uploaded Files</h3>
+      <ul id="listFiles"></ul>
+      <input type="file" id="fileElem" multiple style="display: none" onchange="handleFiles(this.files)">
+      <a href="documents.html">Click to upload more</a>
     </div>
 
-    <div class="chat-input" style="margin-top: 10px;">
-        <input id="chatInput" type="text" placeholder="Type a message..." required>
-        <button onclick="sendMessage()">Send</button>
-    </div>
-
+    <div id="chat" class="card">
+      <h2>Chat with Hoam.ai</h2>
+    <ul id="messages"></ul>
+<form id="form" action="">
+      <input id="input" autocomplete="on" /><button>Ask the AI</button>
+    </form>
 </div>
+    </div>
+</div>
+</div>
+<!-- Set up scripts -->
+<script src="/socket.io/socket.io.js"></script>
+    <script type="module">
+
+      const socket = io();
+
+      const form = document.getElementById('form');
+      const input = document.getElementById('input');
+      const messages = document.getElementById('messages');
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        if (input.value) {
+          socket.emit('chat message', input.value);
+          input.value = '';
+        }
+      });
+
+      socket.on('chat message', (msg) => {
+        const item = document.createElement('li');
+        item.innerText = msg;
+        messages.appendChild(item);
+        //added to show LLM response
+        window.scrollTo(0, document.body.scrollHeight);
+      });
+
+async function loadFileList() {
+    try {
+    const fileList = await fetch('http://localhost:3000/api/files');
+
+    if (!fileList.ok) {
+      throw new Error(`HTTP error! status: ${fileList.status}`);
+    }
+
+    const files = await fileList.json();
+    console.log(files);
+
+    files.forEach(file => {
+      const li = document.createElement('li');
+      li.textContent = file.filename;
+      document.getElementById('listFiles').appendChild(li);
+      console.log(file.filename);
+    });
+  } catch (error) {
+    console.error('error loading file ', error)
+  }
+}
+loadFileList();
+    </script>
 
 </body>
 </html>
