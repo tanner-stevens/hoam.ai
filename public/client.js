@@ -23,30 +23,40 @@ function toggleDarkMode() {
     }
 }
 
-function handleUpload(event) {
-    event.preventDefault();
-    const formData = new FormData(event.target);
-    const fileInput = event.target.querySelector('input[type="file"]');
+async function handleUpload(event) {
+  event.preventDefault();
+  const fileInput = document.getElementById('fileInput');
+  const file = fileInput.files[0];
 
-    fetch('/upload', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => {
-        if (response.ok) {
-            showModal('Upload successful!');
-            if (fileInput) fileInput.value = ''; // clear input
-            if (typeof loadFileList === 'function') {
-                loadFileList(); // refresh visible file list
-            }
-        } else {
-            return response.text().then(text => { throw new Error(text); });
-        }
-    })
-    .catch(error => {
-        showModal('Upload failed. ' + error.message);
-        console.error('Error:', error);
+  if (!file) {
+    showModal("Please select a file to upload.");
+    return;
+  }
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const response = await fetch("https://67a08egpff.execute-api.us-east-2.amazonaws.com/test/upload", {
+      method: "POST",
+      headers: {
+        'x-api-key': "N0I50xLGdz9LmOpHw32th8aN0nLnhhxW1vKLG5Q5"
+      },
+      body: formData
     });
+
+    if (response.ok) {
+      showModal("Upload successful!");
+      fileInput.value = "";
+      loadFileList(); // Refresh list from AWS
+    } else {
+      const text = await response.text();
+      showModal("Upload failed: " + text);
+    }
+  } catch (err) {
+    console.error("Upload error:", err);
+    showModal("Upload failed.");
+  }
 }
 
 // ---------- Register user ----------
