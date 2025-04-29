@@ -57,6 +57,21 @@ app.post('/upload', upload.single('document'), (req, res) => {
     res.send('Success');
 });
 
+const fs = require('fs');
+
+app.get('/api/files', (req, res) => {
+    fs.readdir('uploads', (err, files) => {
+        if (err) {
+            console.error('Failed to list uploaded files:', err);
+            return res.status(500).json({ error: 'Failed to list files' });
+        }
+
+        // Wrap filenames into objects to match frontend expectations
+        const formattedFiles = files.map(filename => ({ filename }));
+        res.json(formattedFiles);
+    });
+});
+
 //register
 app.post('/register', async (req, res) => {
     console.log('Incoming Registration Data:', req.body); // DEBUG LOGGING
