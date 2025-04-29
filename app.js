@@ -4,6 +4,8 @@ import { createServer } from 'node:http';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 import { Server } from 'socket.io';
+import multer from 'multer';
+import fs from 'fs';
 
 //Functional imports for doc upload
 import fetch from 'node-fetch';
@@ -23,6 +25,10 @@ const server = createServer(app);
 const io = new Server(server);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+app.use(express.static('public'));
+app.use(express.urlencoded({ extended: true }));
+app.use(express.json());
+
 app.get('/', (req, res) => {
   res.sendFile(join(__dirname, '/chat.html'));
 });
@@ -30,6 +36,31 @@ app.get('/', (req, res) => {
 //File display info
 const DOC_API_KEY = "N0I50xLGdz9LmOpHw32th8aN0nLnhhxW1vKLG5Q5"
 const DOC_API_URL = "https://67a08egpff.execute-api.us-east-2.amazonaws.com/test/upload?action=list"
+
+// Multer setup
+const upload = multer({ dest: 'uploads/' });
+
+app.post('/upload-to-aws', upload.single('file'), async (req, res) => {
+  try {
+    const filePath = req.file.path;
+    const filename = req.file.originalname;
+    const pdfBinary = fs.readFileSync(filePath);
+
+    const headers = {
+      'x-api-key': FILE_API_KEY,
+      'Content-Type': 'application/pdf',
+      'filename': filename
+    };
+
+    const response = await axios.post(`${FILE_API_URL}?action=upload`, pdfBinary, { headers });
+
+    fs.unlinkSync(filePath); // clean up temp file
+    res.status(200).json({ message: 'Upload to AWS successful', data: response.data });
+  } catch (error) {
+    console.error("Upload to AWS failed:", error.response?.status || error.message);
+    res.status(500).json({ error: 'Upload failed' });
+  }
+});
 
 app.get('/api/files', async (req, res) => {
   try {
@@ -44,6 +75,7 @@ app.get('/api/files', async (req, res) => {
     res.json(files);
   } catch (error) {
     console.error('Error fetching files:', error);
+    res.status(500).json({ error: 'Failed to fetch file list' });
   }
 });
 
