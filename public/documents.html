@@ -34,19 +34,15 @@
 
     <div class="upload-section">
         <h2>Upload a New Document</h2>
-        <form onsubmit="handleUpload(event)" enctype="multipart/form-data">
-            <input type="file" name="document" required>
+        <form id="uploadForm" enctype="multipart/form-data">
+            <input type="file" id="fileInput" name="file" required>
             <button type="submit">Upload</button>
         </form>
     </div>
 
     <div class="documents-list">
         <h2>Documents</h2>
-        <ul>
-            <li>Document 1</li>
-            <li>Document 2</li>
-            <li>Document 3</li>
-        </ul>
+        <ul id="listFiles"></ul>
     </div>
 </div>
 
