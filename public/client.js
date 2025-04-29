@@ -62,12 +62,14 @@ async function loadFileList() {
 
     files.forEach(file => {
       const li = document.createElement('li');
-      li.textContent = file;
-      fileList.appendChild(li);
+      const link = document.createElement('a');
+      link.href = `/uploads/${file.filename}`;
+      link.textContent = file.filename;
+      link.target = '_blank';
+      li.appendChild(link);
+      document.getElementById('listFiles').appendChild(li);
     });
-  } catch (error) {
-    console.error('Error loading file list:', error);
-  }
+  } 
 }
 
 window.onload = loadFileList;
