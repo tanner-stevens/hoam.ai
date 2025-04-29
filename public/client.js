@@ -62,11 +62,7 @@ async function loadFileList() {
 
     files.forEach(file => {
       const li = document.createElement('li');
-      const link = document.createElement('a');
-      link.href = `/uploads/${file.filename}`;
-      link.textContent = file.filename;
-      link.target = '_blank';
-      li.appendChild(link);
+      li.textContent = file.filename; // Access filename field
       document.getElementById('listFiles').appendChild(li);
     });
   } 
