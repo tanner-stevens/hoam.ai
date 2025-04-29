@@ -30,20 +30,20 @@
 </header>
 
 <div class="container">
-    <h1>My Documents</h1>
+  <h1>My Documents</h1>
 
-    <div class="upload-section">
-        <h2>Upload a New Document</h2>
-        <form id="uploadForm" enctype="multipart/form-data">
-            <input type="file" id="fileInput" name="file" required>
-            <button type="submit">Upload</button>
-        </form>
-    </div>
+  <div class="upload-section">
+    <h2>Upload a New Document</h2>
+    <form id="uploadForm" enctype="multipart/form-data" onsubmit="handleUpload(event)">
+      <input type="file" id="fileInput" name="file" required>
+      <button type="submit">Upload</button>
+    </form>
+  </div>
 
-    <div class="documents-list">
-        <h2>Documents</h2>
-        <ul id="listFiles"></ul>
-    </div>
+  <div class="documents-list">
+    <h2>Documents</h2>
+    <ul id="file-list"></ul> <!-- ✅ Match the id to "file-list" -->
+  </div>
 </div>
 
 </body>
