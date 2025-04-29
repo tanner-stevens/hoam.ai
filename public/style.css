@@ -201,3 +201,36 @@ input, select {
     background-color: white;
     color: #004080;
 }
+
+.file-list {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 10px;
+}
+
+.file-item {
+    background-color: #0074D9;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    margin: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    display: inline-block;
+}
+
+.file-item:hover {
+    background-color: #005bb5;
+}
+
+.chat-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 300px;
+    overflow-y: auto;
+    background: white;
+    border-radius: 8px;
+    list-style-type: none;
+    padding-left: 0;
+}
+
