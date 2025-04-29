@@ -3,37 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Chat | Hoam.ai</title>
-    <link rel="stylesheet" href="/public/style.css">
+    <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <script src="/socket.io/socket.io.js"></script> <!-- socket.io client -->
     <script src="app.js" defer></script>
-   <style>
-#form { background: rgba(0, 0, 0, 0.05); padding: 0.5rem; display: flex; border-radius: 8px }
-#input { padding: 0.5rem 1rem; flex-grow: 1; border-radius: 8px; margin-right: 0.5rem; box-shadow: 0 0 10px rgba(0,255,255,0.7) }
-#input:focus { outline: none; box-shadow: 0 0 20px rgba(0,255,255,1); }
-#form > button { background: #333; border: none; padding: 0 1rem; border-radius: 8px; color: #ffffff; font-weight: bolder }
-
-#messages {height: 400px; overflow-y: auto; border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; background-color: #f9f9f9; box-shadow: 0 0 10px rgba(0,255,255,0.2); list-style-type: none; padding-left: 0 }
-#messages > li { padding: 0.5rem 1rem }
-#messages > li:nth-child(odd) { background: #efefef}
-
-.tools { display: flex; flex-direction: row; justify-content: center; align-items: flex-start; gap: 2rem; padding:2rem; flex-wrap: wrap;}
-.card {background: #ffffff; box-shadow: 0 4px 8px rgba(0,0,0,0.1); border-radius: 12px; padding: 2rem; max-width: 500px; width: 100%;}
-
-#uploadDocument { flex: 1 }
-#chat { flex: 2}
-
-@media (max-width: 768px){
-  .content{
-    flex-direction: column;
-    align-items: center;
-  }
-}
-</style>
 </head>
 <body>
 
-<!-- Modal for success/failure popups -->
+<!-- Modal and Dark Mode Toggle + Header -->
 <div id="modal" onclick="closeModal()">
     <div id="modalContent"></div>
 </div>
@@ -53,77 +30,114 @@
     </nav>
 </header>
 
- <div class = "container">
-    <div class ="title" align="center">
-    <h1 align="center" size="xxx-large">Chat with Your Documents</h1>
-    Ask questions based on your HOA's already uploaded documents or add your own to the chat.</div>
-    <div class = "tools">
-    <div id="uploadDocument" class="card">
-      <h2>Your HOA Documents</h2>
-      <h3>Uploaded Files</h3>
-      <ul id="listFiles"></ul>
-      <input type="file" id="fileElem" multiple style="display: none" onchange="handleFiles(this.files)">
-      <a href="documents.html">Click to upload more</a>
+<!-- Page Content -->
+<div class="container">
+    <h1 align="center">Chat with Your Documents</h1>
+    <p align="center">Ask questions based on your HOA's already uploaded documents or add your own to the chat.</p>
+
+    <div class="tools">
+
+        <!-- Document List Card -->
+        <div id="uploadDocument" class="card">
+            <h2>Your HOA Documents</h2>
+            <h3>Uploaded Files</h3>
+            <ul id="listFiles" class="file-list"></ul>
+            <a href="documents.html">Click here to upload more documents</a>
+        </div>
+
+        <!-- Chat Card -->
+        <div id="chat" class="card">
+            <h2>Chat with Hoam.ai</h2>
+            <ul id="messages" class="chat-box"></ul>
+
+            <form id="form" action="" style="display: flex; margin-top: 10px;">
+                <input id="input" autocomplete="on" placeholder="Type your question..." style="flex: 1; padding: 10px; font-size: 16px; border-radius: 8px; margin-right: 10px;">
+                <button type="submit" style="padding: 10px 20px; background-color: #0074D9; color: white; border: none; border-radius: 8px; font-size: 16px;">Ask the AI</button>
+            </form>
+        </div>
+
     </div>
-
-    <div id="chat" class="card">
-      <h2>Chat with Hoam.ai</h2>
-    <ul id="messages"></ul>
-<form id="form" action="">
-      <input id="input" autocomplete="on" /><button>Ask the AI</button>
-    </form>
 </div>
-    </div>
-</div>
-</div>
-<!-- Set up scripts -->
-<script src="/socket.io/socket.io.js"></script>
-    <script type="module">
 
-      const socket = io();
+<!-- Page Scripts -->
+<script type="module">
+const socket = io();
+let selectedDocument = null;
 
-      const form = document.getElementById('form');
-      const input = document.getElementById('input');
-      const messages = document.getElementById('messages');
+// Handle chat form submission
+const form = document.getElementById('form');
+const input = document.getElementById('input');
+const messages = document.getElementById('messages');
 
-      form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        if (input.value) {
-          socket.emit('chat message', input.value);
-          input.value = '';
+form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (input.value) {
+        let finalMessage = input.value;
+        if (selectedDocument) {
+            finalMessage = `[${selectedDocument}] ${finalMessage}`;
         }
-      });
+        socket.emit('chat message', finalMessage);
+        input.value = '';
+    }
+});
 
-      socket.on('chat message', (msg) => {
-        const item = document.createElement('li');
-        item.innerText = msg;
-        messages.appendChild(item);
-        window.scrollTo(0, document.body.scrollHeight);
-      });
+socket.on('chat message', (msg) => {
+    const item = document.createElement('li');
+    item.innerText = msg;
+    messages.appendChild(item);
+    messages.scrollTop = messages.scrollHeight;
+});
 
+// Load file list
 async function loadFileList() {
     try {
-    const fileList = await fetch('http://localhost:3000/api/files');
+        const fileList = await fetch('http://localhost:3000/api/files');
 
-    if (!fileList.ok) {
-      throw new Error(`HTTP error! status: ${fileList.status}`);
+        if (!fileList.ok) {
+            throw new Error(`HTTP error! status: ${fileList.status}`);
+        }
+
+        const files = await fileList.json();
+        const listElement = document.getElementById('listFiles');
+        listElement.innerHTML = ''; // Clear any old content
+
+        files.forEach(file => {
+            const li = document.createElement('li');
+            li.textContent = file.filename;
+            li.classList.add('file-item');
+
+            li.addEventListener('click', () => {
+                selectFile(file.filename);
+            });
+
+            listElement.appendChild(li);
+        });
+    } catch (error) {
+        console.error('Error loading file list:', error);
     }
-
-    const files = await fileList.json();
-    console.log(files);
-
-    files.forEach(file => {
-      const li = document.createElement('li');
-      li.textContent = file.filename;
-      document.getElementById('listFiles').appendChild(li);
-      console.log(file.filename);
-    });
-  } catch (error) {
-    console.error('error loading file ', error)
-  }
 }
+
+function selectFile(filename) {
+    selectedDocument = filename;
+    highlightSelectedFile(filename);
+}
+
+function highlightSelectedFile(filename) {
+    const items = document.querySelectorAll('#listFiles li');
+    items.forEach(item => {
+        if (item.textContent === filename) {
+            item.style.backgroundColor = '#2ecc40'; // green
+            item.style.color = 'white';
+        } else {
+            item.style.backgroundColor = '';
+            item.style.color = '';
+        }
+    });
+}
+
 loadFileList();
-    </script>
+</script>
 
 </body>
 </html>
+
