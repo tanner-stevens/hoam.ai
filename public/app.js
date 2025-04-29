@@ -78,6 +78,11 @@ function handleLogin(event) {
     })
     .then(response => {
         if (response.ok) {
+            formData.forEach((value, key) => {
+                if (key === 'email') {
+                    localStorage.setItem('userEmail', value);
+                }
+            });
             showModal('Login successful!');
             setTimeout(() => {
                 window.location.href = '/documents.html';
