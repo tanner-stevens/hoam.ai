@@ -7,6 +7,7 @@ import http from 'http';
 import { Server } from 'socket.io';
 import { fileURLToPath } from 'url';
 import fs from 'fs';
+import axios from 'axios';
 
 // Setup __dirname manually for ES modules
 const __filename = fileURLToPath(import.meta.url);
@@ -35,13 +36,10 @@ const userSchema = new mongoose.Schema({
 const User = mongoose.model('User', userSchema);
 
 // Multer config
-const storage = multer.diskStorage({
-    destination: 'uploads/',
-    filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
-    }
-});
-const upload = multer({ storage });
+const upload = multer({ storage: multer.memoryStorage() });
+
+const FILE_API_URL = "https://67a08egpff.execute-api.us-east-2.amazonaws.com/test/upload";
+const FILE_API_KEY = "N0I50xLGdz9LmOpHw32th8aN0nLnhhxW1vKLG5Q5";
 
 // Middleware
 app.use(cors());
@@ -54,10 +52,31 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Upload
-app.post('/upload', upload.single('document'), (req, res) => {
-    console.log('Uploaded:', req.file);
-    res.send('Success');
+// Upload - Modified to use 'any()' to accept any field name
+app.post('/upload', upload.any(), async (req, res) => {
+    try {
+        // Check if any files were uploaded
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({ error: 'No file uploaded' });
+        }
+        
+        const fileBuffer = req.files[0].buffer;
+        const originalName = req.files[0].originalname;
+
+        const headers = {
+            'x-api-key': FILE_API_KEY,
+            'Content-Type': 'application/pdf',
+            'filename': originalName,
+        };
+
+        const response = await axios.post(`${FILE_API_URL}?action=upload`, fileBuffer, { headers });
+
+        console.log('Uploaded:', originalName);
+        res.status(200).json({ message: "File uploaded successfully", data: response.data });
+    } catch (err) {
+        console.error('Upload error:', err.response?.data || err.message);
+        res.status(500).json({ error: 'Upload failed', detail: err.message });
+    }
 });
 
 // List uploaded files
