@@ -265,5 +265,7 @@ input, select {
     border-radius: 12px;
     margin: 20px auto;
     max-width: 600px;
+    color: black; /* Force text to pure black */
 }
+
 
