@@ -25,39 +25,52 @@ function toggleDarkMode() {
 
 async function handleUpload(event) {
   event.preventDefault();
-  const fileInput = document.getElementById('fileInput');
-  const file = fileInput.files[0];
-
-  if (!file) {
-    showModal("Please select a file to upload.");
-    return;
-  }
-
   const formData = new FormData();
-  formData.append('file', file);
+  const fileInput = document.querySelector('input[type="file"]');
+  formData.append('document', fileInput.files[0]);
 
   try {
-    const response = await fetch("https://67a08egpff.execute-api.us-east-2.amazonaws.com/test/upload", {
-      method: "POST",
-      headers: {
-        'x-api-key': "N0I50xLGdz9LmOpHw32th8aN0nLnhhxW1vKLG5Q5"
-      },
-      body: formData
+    const response = await fetch('/upload', {
+      method: 'POST',
+      body: formData,
     });
 
     if (response.ok) {
-      showModal("Upload successful!");
-      fileInput.value = "";
-      loadFileList(); // Refresh list from AWS
+      alert('Upload successful!');
+      loadFileList(); // ← Call this to update list immediately
     } else {
-      const text = await response.text();
-      showModal("Upload failed: " + text);
+      alert('Upload failed.');
     }
-  } catch (err) {
-    console.error("Upload error:", err);
-    showModal("Upload failed.");
+  } catch (error) {
+    console.error('Error uploading file:', error);
+    alert('Upload failed.');
   }
 }
+
+async function loadFileList() {
+  try {
+    const response = await fetch('/api/files');
+    const files = await response.json();
+
+    const fileList = document.getElementById('file-list');
+    fileList.innerHTML = ''; // Clear current list
+
+    if (files.length === 0) {
+      fileList.innerHTML = '<p>No files uploaded yet.</p>';
+      return;
+    }
+
+    files.forEach(file => {
+      const li = document.createElement('li');
+      li.textContent = file;
+      fileList.appendChild(li);
+    });
+  } catch (error) {
+    console.error('Error loading file list:', error);
+  }
+}
+
+window.onload = loadFileList;
 
 // ---------- Register user ----------
 function handleRegister(event) {
