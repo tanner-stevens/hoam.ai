@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Hoam.ai</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+<!-- Modal for success/failure popups -->
+<div id="modal" onclick="closeModal()">
+    <div id="modalContent"></div>
+</div>
+
+<!-- Header with Logo -->
+<header>
+    <div class="logo-title">
+        <img src="logo.png" alt="Hoam.ai Logo" class="logo">
+        Hoam.ai
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">Why Hoam.ai</a>
+        <a href="documents.html">My Documents</a>
+        <a href="login.html">Login</a>
+        <a href="chat.html">Chat</a>
+        <button onclick="toggleDarkMode()" class="dark-mode-toggle">🌙</button>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>Create an Account</h1>
+
+    <form onsubmit="handleRegister(event)">
+        <input type="text" name="name" placeholder="Name" required>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="text" name="address" placeholder="Address" required>
+        <select name="hoa" required>
+            <option value="">Select Your HOA</option>
+            <option value="HOA A">HOA A</option>
+            <option value="HOA B">HOA B</option>
+            <option value="Add New HOA">Add New HOA</option>
+        </select>
+        <input type="password" name="password" placeholder="Password" required>
+        <label style="display:block; margin-top:10px;">
+            <input type="checkbox" name="newsletter"> Yes! I want to learn more from Hoam.ai
+        </label>
+        <button type="submit">Create an Account</button>
+    </form>
+
+</div>
+
+</body>
+</html>

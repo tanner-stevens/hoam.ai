@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>My Documents | Hoam.ai</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <script src="app.js" defer></script>
+</head>
+<body>
+
+<!-- Modal for success/failure popups -->
+<div id="modal" onclick="closeModal()">
+    <div id="modalContent"></div>
+</div>
+
+<header>
+    <div class="logo-title">
+        <img src="logo.png" alt="Hoam.ai Logo" class="logo">
+        Hoam.ai
+    </div>
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="about.html">Why Hoam.ai</a>
+        <a href="documents.html">My Documents</a>
+        <a href="login.html">Login</a>
+        <a href="chat.html">Chat</a>
+        <button onclick="toggleDarkMode()" class="dark-mode-toggle">🌙</button>
+    </nav>
+</header>
+
+<div class="container">
+    <h1>My Documents</h1>
+
+    <div class="upload-section">
+        <h2>Upload a New Document</h2>
+        <form onsubmit="handleUpload(event)" enctype="multipart/form-data">
+            <input type="file" name="document" required>
+            <button type="submit">Upload</button>
+        </form>
+    </div>
+
+    <div class="documents-list">
+        <h2>Documents</h2>
+        <ul>
+            <li>Document 1</li>
+            <li>Document 2</li>
+            <li>Document 3</li>
+        </ul>
+    </div>
+</div>
+
+</body>
+</html>

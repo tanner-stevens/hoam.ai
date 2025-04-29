@@ -1,0 +1,27 @@
+{
+  "name": "cs120_final",
+  "version": "1.0.0",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gsendo/cs120_final.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/gsendo/cs120_final/issues"
+  },
+  "homepage": "https://github.com/gsendo/cs120_final#readme",
+  "description": "",
+  "dependencies": {
+    "express": "^5.1.0",
+    "mongoose": "^8.14.0",
+    "multer": "^1.4.5-lts.2",
+    "socket.io": "^4.8.1"
+  }
+}

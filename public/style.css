@@ -1,0 +1,203 @@
+/* Import Google Font */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap');
+
+/* Base styles */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+    color: #333;
+}
+
+/* Header styles */
+header {
+    background-color: #004080;
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo-title {
+    display: flex;
+    align-items: center;
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.logo {
+    height: 40px;
+    margin-right: 10px;
+}
+
+nav {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: 600;
+    font-size: 18px;
+    margin-right: 15px;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+/* General page container */
+.container {
+    padding: 40px 20px;
+    max-width: 800px;
+    margin: auto;
+    text-align: center;
+}
+
+/* Button styles */
+button {
+    background-color: #0074D9;
+    color: white;
+    border: none;
+    padding: 12px 25px;
+    cursor: pointer;
+    margin-top: 10px;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #005bb5;
+}
+
+/* Form styles */
+form {
+    background: white;
+    padding: 30px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+input, select {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    font-size: 16px;
+}
+
+/* Upload section */
+.upload-section {
+    margin-top: 40px;
+}
+
+.documents-list ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.documents-list li {
+    background-color: #eee;
+    margin: 5px 0;
+    padding: 10px;
+    border-radius: 5px;
+}
+
+/* Chat box styles */
+.chat-box {
+    border: 1px solid #ccc;
+    padding: 10px;
+    height: 300px;
+    overflow-y: scroll;
+    margin-bottom: 10px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.chat-input {
+    display: flex;
+}
+
+.chat-input input {
+    flex-grow: 1;
+    padding: 10px;
+    font-size: 16px;
+}
+
+.chat-input button {
+    margin-left: 5px;
+}
+
+/* Modal styles */
+#modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.5);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+#modalContent {
+    background: white;
+    padding: 30px 50px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 20px;
+    color: #333;
+}
+
+/* Dark mode styles */
+.dark-mode {
+    background-color: #1a1a1a;
+    color: #e0e0e0;
+}
+
+.dark-mode header {
+    background-color: #121212;
+}
+
+.dark-mode nav a {
+    color: #e0e0e0;
+}
+
+.dark-mode .chat-box {
+    background-color: #2a2a2a;
+    color: #f1f1f1;
+}
+
+.dark-mode #modalContent {
+    background: #333;
+    color: #f1f1f1;
+}
+
+.dark-mode-toggle {
+    background: none;
+    border: 2px solid white;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 16px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.dark-mode-toggle:hover {
+    background-color: white;
+    color: #004080;
+}

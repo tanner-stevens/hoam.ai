@@ -1,0 +1,27 @@
+// storing embeddings in OpenSearch with KNN or vector search enabled, 
+// you must set up an index with a knn_vector field. 
+// Create your index with a knn_vector field. Suppose each vector is 768-dimensional
+// If Titan embeddings produce a different dimension (e.g., 1024), update "dimension": 1024.
+
+PUT /my-index
+{
+  "settings": {
+    "index": {
+      "knn": true
+    }
+  },
+  "mappings": {
+    "properties": {
+      "chunk_id": {
+        "type": "keyword"
+      },
+      "text": {
+        "type": "text"
+      },
+      "embedding": {
+        "type": "knn_vector",
+        "dimension": 768  // Adjust to match your actual embedding dimension
+      }
+    }
+  }
+}

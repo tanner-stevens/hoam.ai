@@ -1,0 +1,64 @@
+/************************************************************
+     * Chatbot Module
+     *    - #06011a background
+     *    - Input border
+     *    - Loader GIF 160x120, left-aligned, vertical center
+     ************************************************************/
+    .llm-module {
+      margin: 0 auto 0.5rem auto;
+      max-width: 560px;
+      padding: 0.85rem;
+      background-color: #06011a !important;
+      color: #fff !important;
+      border: 2px solid #333;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      text-align: center;
+      position: relative;
+    }
+    .llm-module .input-field {
+      margin: 0;
+    }
+    .llm-module input[type="text"] {
+      background-color: transparent;
+      color: #fff;
+      border: 1px solid #777;
+      padding: 0.4rem 0.5rem;
+      border-radius: 4px;
+    }
+    .llm-module .send-btn {
+      margin-top: 1rem;
+      font-family: "Roboto", sans-serif;
+      font-weight: 500;
+    }
+
+    .loader-gif {
+      position: absolute;
+      top: 50%;
+      left: 1rem;
+      transform: translateY(-50%);
+      width: 180px;
+      height: 135px;
+    }
+"""
+    <!-- Changes to entire web page -->
+  <div class="main-workspace">
+    <!-- Chatbot Module with #06011a BG, 160x120 loader left-aligned -->
+    <div class="llm-module">
+      <h6 style="margin-bottom: 0.75rem;">Ask Newt</h6>
+      <div class="row" style="margin-bottom: 0;">
+        <div class="input-field col s12" style="margin: 0;">
+          <input type="text" id="chatInput" placeholder="ask anything..." />
+        </div>
+      </div>
+      <button class="btn waves-effect waves-light send-btn" type="submit">
+        Send
+      </button>
+
+      <img
+        src="uimages/loader2.gif"
+        alt="Loading..."
+        class="loader-gif"
+      />
+    </div>
+"""

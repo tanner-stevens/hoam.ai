@@ -1,0 +1,32 @@
+API 1: File Operations (https://67a08egpff.execute-api.us-east-2.amazonaws.com/test/upload)
+API Key: (x-api-key: N0I50xLGdz9LmOpHw32th8aN0nLnhhxW1vKLG5Q5)
+
+1. Upload File (POST url?action=upload)**: Uploads a file to the server.
+    **Headers**: `Content-Type`: application/pdf (or the file's MIME type), `filename`: original filename (including extension).
+    **Body**: Binary data of the file.
+    **Response**: On success, returns status code `200 OK`, response body may contain a success message. On error, returns `4xx` or `5xx` status code, response body is a JSON error message.
+
+2. List Files (POST url?action=list)**: Retrieves a list of filenames stored on the server.
+    **Body**: None.
+    **Response**: On success, returns status code `200 OK`, response body is a JSON array containing filenames. On error, returns `4xx` or `5xx` status code, response body is a JSON error message.
+
+3. Delete File (POST url?action=delete)**: Deletes the specified file from the server.
+    **Headers**: `filename`: filename to delete (including extension).
+    **Body**: None.
+    **Response**: On success, returns status code `200 OK`, response body may contain a success message. On error, returns `4xx` or `5xx` status code, response body is a JSON error message.
+
+4. Download File (POST url?action=download)**: Downloads the specified file from the server.
+    **Headers**: `filename`: filename to download (including extension).
+    **Body**: None.
+    **Response**: On success, returns status code `200 OK`, response body is JSON `{"body": "base64_encoded_data"}`. The frontend needs to decode the `body` field. On error, returns `4xx` or `5xx` status code, response body is a JSON error message.
+
+---
+
+API 2: User Questions (https://rgo89zwyke.execute-api.us-east-2.amazonaws.com/dev/ask)
+API Key: (x-api-key: API_KEY = "MqwABFGNhC4FF1Kqu2otv7ElRos1DbuS1FCkfuJx")
+
+1. User Question (POST url)**: Sends a question to the server and get Top 3 similar results retrieved from knowledge base.
+    **Headers**: `Content-Type: application/json`
+    **Body**: JSON `{"query": "questions"}`
+    **Response**: On success, returns status code `200 OK`, response body is JSON `{"results": "Top 3 similar results retrieved from knowledge base"}`. On error, returns `4xx` or `5xx` status code, response body is a JSON error message.
+	
