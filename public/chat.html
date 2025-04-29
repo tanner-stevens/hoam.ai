@@ -91,7 +91,7 @@ socket.on('chat message', (msg) => {
 // Load file list
 async function loadFileList() {
     try {
-        const fileList = await fetch('http://localhost:3000/api/files');
+        const fileList = await fetch('/api/files');
 
         if (!fileList.ok) {
             throw new Error(`HTTP error! status: ${fileList.status}`);
