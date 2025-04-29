@@ -30,15 +30,38 @@
 </header>
 
 <div class="container">
-    <h1>Login</h1>
+    <div id="loginContent">
+        <h1>Login</h1>
 
-    <form onsubmit="handleLogin(event)">
-        <input type="email" name="email" placeholder="Email" required>
-        <input type="password" name="password" placeholder="Password" required> <!-- Password field just for display -->
-        <button type="submit">Login</button>
-    </form>
-
+        <form onsubmit="handleLogin(event)">
+            <input type="email" name="email" placeholder="Email" required>
+            <input type="password" name="password" placeholder="Password" required>
+            <button type="submit">Login</button>
+        </form>
+    </div>
 </div>
+
+<script>
+// --- On page load, check if already logged in ---
+window.addEventListener('load', () => {
+    const userEmail = localStorage.getItem('userEmail');
+    const loginContent = document.getElementById('loginContent');
+
+    if (userEmail) {
+        loginContent.innerHTML = `
+            <h1>Welcome back!</h1>
+            <p>Logged in as <strong>${userEmail}</strong></p>
+            <button onclick="logout()">Logout</button>
+        `;
+    }
+});
+
+// --- Logout function ---
+function logout() {
+    localStorage.removeItem('userEmail');
+    location.reload();
+}
+</script>
 
 </body>
 </html>
