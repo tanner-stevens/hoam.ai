@@ -24,7 +24,7 @@ const io = new Server(server);
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.get('/', (req, res) => {
-  res.sendFile(join(__dirname, '/public/chat.html'));
+  res.sendFile(join(__dirname, '/chat.html'));
 });
 
 //File display info
@@ -94,6 +94,7 @@ io.on('connection', (socket) => {
   })
 });
 
-server.listen(3000, () => {
-  console.log('server running at http://localhost:3000');
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, '0.0.0.0', () => {
+  console.log(`server running at http://localhost:${PORT}`);
 });
