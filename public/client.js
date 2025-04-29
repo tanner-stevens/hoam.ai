@@ -26,7 +26,8 @@ function toggleDarkMode() {
 async function handleUpload(event) {
   event.preventDefault();
   const formData = new FormData();
-  const fileInput = document.querySelector('input[type="file"]');
+  const fileInput = document.getElementById('fileInput');
+  if (!fileInput || !fileInput.files.length) return;
   formData.append('document', fileInput.files[0]);
 
   try {
@@ -52,19 +53,21 @@ async function loadFileList() {
     const response = await fetch('/api/files');
     const files = await response.json();
 
-    const fileList = document.getElementById('file-list');
+    const fileList = document.getElementById('listFiles');
     fileList.innerHTML = ''; // Clear current list
 
-    if (files.length === 0) {
-      fileList.innerHTML = '<p>No files uploaded yet.</p>';
+    if (!Array.isArray(files) || files.length === 0) {
+      fileList.innerHTML = '<li>No files uploaded yet.</li>';
       return;
     }
 
     files.forEach(file => {
       const li = document.createElement('li');
-      li.textContent = file.filename; // Access filename field
-      document.getElementById('listFiles').appendChild(li);
+      li.textContent = file.filename || 'Unnamed file'; // Access filename field
+      fileList.appendChild(li);
     });
+  } catch (error) {
+      console.error('Error loading files:', error);
   } 
 }
 
@@ -149,9 +152,9 @@ window.addEventListener('load', () => {
     if (localStorage.getItem('darkMode') === 'enabled') {
         document.body.classList.add('dark-mode');
     }
-});
 
-document.addEventListener('DOMContentLoaded', () => {
+    loadFileList();
+
     const uploadForm = document.getElementById('uploadForm');
     if (uploadForm) {
         uploadForm.addEventListener('submit', handleUpload);
