@@ -34,13 +34,7 @@ def knn_search_opensearch(os_endpoint, index_name, query_vector, k=5, os_user=No
     return response.json()
 
 def lambda_handler_similarity(event, context):
-    """
-    AWS Lambda handler (example):
-    1. Receives a user query.
-    2. Gets query embedding from Bedrock.
-    3. Searches OpenSearch for top-K results.
-    4. Returns top-K similar chunks.
-    """
+    
     query = event.get("query", "")
     k = event.get("k", 5)
     
